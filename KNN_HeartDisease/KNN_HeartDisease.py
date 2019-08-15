@@ -1,13 +1,7 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[14]:
-
-
-import pandas as pd 
+import pandas as pd
 import numpy as np
 
-#applying z-score to standardize the dataframe
+#Applying z-score to standardize the dataframe
 def standardize_df(df):
     
     for col in df.columns:
@@ -20,59 +14,59 @@ def standardize_df(df):
 
     return df
 
-#calculating euclidian distance between two given datapoints
+#Calculating euclidian distance between two given datapoints
 def e_dist(e1, e2):
     sqrd_dist = 0
     
-    #points in this dataset have 13 dimensions
+    #Points in this dataset have 13 dimensions
     for i in range(13):
         sqrd_dist += (e1[i] - e2[i]) ** 2
 
     return sqrd_dist ** (1/2)
 
 
-#those next few lines are responsible for applying the whole algorithm
+#Those next few lines are responsible for applying the whole algorithm
 def apply_KNN(k, x): 
     
     dist=[]
-    #this array will contain all distances from the given test point to the training points, as well as the training
+    #This array will contain all distances from the given test point to the training points, as well as the training
     #points' outcomes
     for i in traindf.index:
         dist.append([e_dist(traindf.loc[i], x), traindf.target[i]])
     
-    #sorting the array so we can have the smaller distances (nearest neighbours) on its early positions
+    #Sorting the array so we can have the smaller distances (nearest neighbours) on its early positions
     dist.sort()
 
-    #this little loop will count how many outcomes of the k nearest neighbours are Positive
+    #This little loop will count how many outcomes of the k nearest neighbours are Positive
     pos = 0
     for i in range (k):
         if dist[i][1] == 'Positive':
             pos += 1
     
-    #checking the predominant outcome, and then classifying our training point
+    #Checking the predominant outcome, and then classifying our training point
     if (k-pos < k/2):
         return 'Positive'
     else:
         return 'Negative'
 
-#using pandas to read the dataset's csv
+#Using pandas to read the dataset's csv
 df = pd.read_csv("https://bit.ly/2YKHhQi")
 
-#changing the outcome to a string result so we don't affect the data standardzation and have a more clear view of what's
-#going on
+#Changing the outcome to a string result so we don't affect the data standardzation and have a more clear view of what's
+#Going on
 df['target'] = df['target'].replace(0, 'Negative')
 df['target'] = df['target'].replace(1, 'Positive')
 
-#organazing dataset, appying standardize function and sppliting the original dataframe into "train" and "test"
+#Organazing dataset, appying standardize function and sppliting the original dataframe into "train" and "test"
 df = standardize_df(df) 
 traindf = df.iloc[:700] 
 testdf = df.iloc[700:850].reset_index(drop=True)
 
-#choosing "k" for the algorithm, k=1 was found to be the best one in this ocasion, showing that this dataframe is really
-#well balanced
+#Choosing "k" for the algorithm, k=1 was found to be the best one in this ocasion, showing that this dataframe is really
+#Well balanced
 k = 1
 
-#counting answers and printing the results out
+#Counting answers and printing the results out
 correct = 0 
 wrong = 0 
 falseneg = 0 
@@ -107,5 +101,3 @@ print('Fake Negatives: '+str(falseneg)+'\n')
 print('Accuracy: '+str(round(100*(correct/(correct+wrong))))+'%')
 print('Precision: '+str(round(100*(truepos/(truepos + falsepos))))+'%')
 print('Recall: '+str(round(100*(truepos/(truepos + falseneg)))))
-
-
