@@ -109,8 +109,3 @@ print('Precision: '+str(round(100*(truepos/(truepos + falsepos))))+'%')
 print('Recall: '+str(round(100*(truepos/(truepos + falseneg)))))
 
 
-# In[ ]:
-
-
-
-
